@@ -15,5 +15,5 @@ export const dbProviders = [
                 __dirname + '/../**/*.entity{.ts,.js}',
             ],
         }),
-    }
+    },
 ];

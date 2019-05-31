@@ -5,6 +5,6 @@ export const itemProviders = [
     {
         provide: 'ITEM_REPOSITORY',
         useFactory: (connection: Connection) => connection.getRepository(Item),
-        inject: ['DATABASE_CONNECTION']
-    }
-]
+        inject: ['DATABASE_CONNECTION'],
+    },
+];
