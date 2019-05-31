@@ -21,5 +21,5 @@ export class Page {
     itinerary: Itinerary;
 
     @OneToMany(type => Item, item => item.page)
-    items: Item[]
+    items: Item[];
 }
