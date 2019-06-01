@@ -2,6 +2,7 @@ import { Controller, Get, Param, HttpException, HttpStatus, Post, Body } from '@
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
+import { CreateItineraryDto } from './dto/createItineraryDto.dto';
 
 @Controller('itinerary')
 export class ItineraryController {
@@ -26,7 +27,7 @@ export class ItineraryController {
     // TODO: complete implementation and test
     // TODO: validation
     @Post()
-    async createItinerary(@Body() body) {
+    async createItinerary(@Body() body: CreateItineraryDto) {
         try {
             // TODO: get user entity by user id
             const insert = await this.itineraryService.createNew(body.title, body.owner);
