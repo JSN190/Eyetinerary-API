@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { itineraryProviders } from './itinerary.providers';
 import { ItineraryService } from './itinerary.service';
+import { ItineraryController } from './itinerary.controller';
 
 @Module({
     imports: [DatabaseModule],
@@ -9,6 +10,7 @@ import { ItineraryService } from './itinerary.service';
         ...itineraryProviders,
         ItineraryService,
     ],
+    controllers: [ ItineraryController ],
 })
 
 export class ItineraryModule {}
