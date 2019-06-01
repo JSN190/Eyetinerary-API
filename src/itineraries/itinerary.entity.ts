@@ -20,7 +20,7 @@ export class Itinerary {
     @UpdateDateColumn()
     updated: number;
 
-    @ManyToOne(type => User)
+    @ManyToOne(type => User, { nullable: true })
     owner: User;
 
     @OneToMany(type => Page, page => page.itinerary)
