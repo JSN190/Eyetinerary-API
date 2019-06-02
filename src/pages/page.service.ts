@@ -13,7 +13,7 @@ export class PageService {
         return await this.repository.findOne({ id }, { relations: ['items'] });
     }
 
-    async createNew(title: string, itinerary: Itinerary) {
+    async createNew(title: string, itinerary: Itinerary): Promise<number> {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()

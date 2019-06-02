@@ -13,7 +13,8 @@ export class ItemService {
         return await this.repository.findOne({ id });
     }
 
-    async createNew(title: string, body: string, page: Page, timeStart: Date, timeEnd?: Date) {
+    async createNew(title: string, body: string, page: Page, timeStart: Date, timeEnd?: Date)
+    : Promise<number> {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()
