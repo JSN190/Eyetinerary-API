@@ -10,7 +10,7 @@ export class ItineraryService {
     ) {}
 
     async findOne(id: number): Promise<Itinerary> {
-        return await this.repository.findOne(id);
+        return await this.repository.findOne({ id });
     }
 
     async createNew(title: string, owner?: User): Promise<number> {
