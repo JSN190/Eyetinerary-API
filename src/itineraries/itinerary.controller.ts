@@ -1,5 +1,4 @@
 import { Controller, Get, Param, HttpException, HttpStatus, Post, Body, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
 import { CreateItineraryDto } from './dto/createItineraryDto.dto';
