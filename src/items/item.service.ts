@@ -22,8 +22,8 @@ export class ItemService {
             title,
             body,
             page,
-            timeStart: timeStart.valueOf(),
-            timeEnd: timeEnd ? timeEnd.valueOf() : null,
+            timeStart,
+            timeEnd,
          })
         .execute();
         return inserted.identifiers[0].id;
