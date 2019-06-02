@@ -7,6 +7,9 @@ export class Item {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({ nullable: true })
+    pageId: number;
+
     @ManyToOne(type => Page, page => page.items)
     page: Page;
 
