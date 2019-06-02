@@ -16,16 +16,16 @@ export class Item {
     @Column({ length: 1000 })
     body: string;
 
-    @Column({ type: 'timestamp' })
-    timeStart: number;
-
     @Column({ type: 'timestamp', nullable: false })
-    timeEnd: number;
+    timeStart: Date;
+
+    @Column({ type: 'timestamp', nullable: true })
+    timeEnd: Date;
 
     @CreateDateColumn()
-    created: number;
+    created: Date;
 
     @UpdateDateColumn()
-    updated: number;
+    updated: Date;
 
 }
