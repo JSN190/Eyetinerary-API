@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn,
-    CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
+    CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Page } from '../pages/page.entity';
 import { User } from '../users/user.entity';
 
@@ -14,15 +14,18 @@ export class Itinerary {
     @Column({ length: 140 })
     editToken: string;
 
-    @CreateDateColumn()
-    created: number;
-
-    @UpdateDateColumn()
-    updated: number;
+    @Column({ nullable: true })
+    ownerId: number;
 
     @ManyToOne(type => User, { nullable: true })
     owner: User;
 
     @OneToMany(type => Page, page => page.itinerary)
     pages: Page[];
+
+    @CreateDateColumn()
+    created: number;
+
+    @UpdateDateColumn()
+    updated: number;
 }
