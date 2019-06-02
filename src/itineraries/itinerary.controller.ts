@@ -15,13 +15,13 @@ export class ItineraryController {
     @Get(':id')
     async getItinerary(@Param() params) {
        const item: Itinerary = await this.itineraryService.findOne(params.id);
-       if (!item) {
-            throw new NotFoundException(`Itinerary ${params.id} not found`, 'Not Found');
-       } else {
+       if (item) {
             return {
-               success: true,
-               ...item,
-           };
+                success: true,
+                ...item,
+            };
+       } else {
+           throw new NotFoundException(`Itinerary ${params.id} not found`, 'Not Found');
        }
     }
 

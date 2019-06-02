@@ -15,29 +15,29 @@ export class PageController {
     @Get(':id')
     async getPage(@Param() params) {
         const page: Page = await this.pageService.findOne(params.id);
-        if (!page) {
-            throw new NotFoundException(`Page ${params.id} not found`, 'Not Found');
-        } else {
+        if (page) {
             return {
                 success: true,
                 ...page,
             };
+        } else {
+            throw new NotFoundException(`Page ${params.id} not found`, 'Not Found');
         }
     }
 
     @Post()
     async createPage(@Body() body: CreatePageDto) {
         const itinerary: Itinerary = await this.itineraryService.findOne(body.itinerary);
-        if (!itinerary) {
-            throw new BadRequestException(`Itinerary ${body.itinerary} not found`,
-            'Itinerary Not Found');
-        } else {
+        if (itinerary) {
             const id: number = await this.pageService.createNew(body.title, itinerary);
             const page: Page = await this.pageService.findOne(id);
             return {
                 success: true,
                 ...page,
             };
+        } else {
+            throw new BadRequestException(`Itinerary ${body.itinerary} not found`,
+            'Itinerary Not Found');
         }
     }
 }
