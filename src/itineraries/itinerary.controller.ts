@@ -33,10 +33,11 @@ export class ItineraryController {
     async createItinerary(@Body() body: CreateItineraryDto) {
         try {
             // TODO: get user entity by user id
-            const insert = await this.itineraryService.createNew(body.title, body.owner);
+            const id: number = await this.itineraryService.createNew(body.title, body.owner);
+            const itinerary: Itinerary = await this.itineraryService.findOne(id);
             return {
                 success: true,
-                id: insert.id,
+                ...itinerary,
             };
         } catch (e) {
             throw new HttpException('Internal Server Error',

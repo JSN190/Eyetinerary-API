@@ -19,6 +19,6 @@ export class ItineraryService {
         .insert()
         .values({ title, editToken: 'test', owner })
         .execute();
-        return inserted.generatedMaps[0];
+        return inserted.identifiers[0].id;
     }
 }
