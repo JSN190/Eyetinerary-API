@@ -10,10 +10,10 @@ export class ItineraryService {
     ) {}
 
     async findOne(id: number): Promise<Itinerary> {
-        return await this.repository.findOneOrFail(id);
+        return await this.repository.findOne(id);
     }
 
-    async createNew(title: string, owner?: User) {
+    async createNew(title: string, owner?: User): Promise<number> {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()
