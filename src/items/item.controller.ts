@@ -3,6 +3,7 @@ import { ItemService } from './item.service';
 import { Item } from './item.entity';
 import { PageService } from '../pages/page.service';
 import { Page } from '../pages/page.entity';
+import { CreateItemDto } from './dto/createItemDto.dto';
 
 @Controller('item')
 export class ItemController {
@@ -25,11 +26,13 @@ export class ItemController {
     }
 
     @Post()
-    async createItem(@Body() body: any) {
+    async createItem(@Body() body: CreateItemDto) {
         const page: Page = await this.pageService.findOne(body.page);
+        const timeStart: Date = new Date(body.timeStart);
+        const timeEnd: Date = body.timeEnd ? new Date(body.timeEnd) : null;
         if (page) {
-            const id: number = await this.itemService.createNew(body.title, body.string,
-                body.page, body.timeStart, body.timeEnd);
+            const id: number = await this.itemService.createNew(body.title, body.body,
+                page, timeStart, timeEnd);
             const item: Item = await this.itemService.findOne(id);
             return {
                 success: true,
