@@ -10,7 +10,7 @@ export class PageService {
     ) {}
 
     async findOne(id: number): Promise<Page> {
-        return await this.repository.findOne({ id });
+        return await this.repository.findOne({ id }, { relations: ['items'] });
     }
 
     async createNew(title: string, itinerary: Itinerary) {
