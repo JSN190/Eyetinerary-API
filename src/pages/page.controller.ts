@@ -3,6 +3,7 @@ import { PageService } from './page.service';
 import { Page } from './page.entity';
 import { ItineraryService } from '../itineraries/itinerary.service';
 import { Itinerary } from '../itineraries/itinerary.entity';
+import { CreatePageDto } from './dto/createPage.dto';
 
 @Controller('page')
 export class PageController {
@@ -25,7 +26,7 @@ export class PageController {
     }
 
     @Post()
-    async createPage(@Body() body: any) {
+    async createPage(@Body() body: CreatePageDto) {
         const itinerary: Itinerary = await this.itineraryService.findOne(body.itinerary);
         if (!itinerary) {
             throw new BadRequestException(`Itinerary ${body.itinerary} not found`,
