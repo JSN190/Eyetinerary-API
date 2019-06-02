@@ -9,10 +9,13 @@ export class ItineraryController {
     constructor(private readonly itineraryService: ItineraryService) {}
 
     @Get(':id')
-    async getItinerary(@Param() params): Promise<Itinerary> {
+    async getItinerary(@Param() params) {
         try {
             const item: Itinerary = await this.itineraryService.findOne(params.id);
-            return item;
+            return {
+                success: true,
+                ...item,
+            };
         } catch (e) {
             if (e instanceof EntityNotFoundError) {
                 throw new HttpException('Itinerary Not Found',

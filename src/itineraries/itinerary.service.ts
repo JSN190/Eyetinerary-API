@@ -13,7 +13,7 @@ export class ItineraryService {
         return await this.repository.findOneOrFail(id);
     }
 
-    async createNew(title: string, owner: User) {
+    async createNew(title: string, owner?: User) {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()
