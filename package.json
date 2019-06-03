@@ -25,6 +25,8 @@
     "@nestjs/platform-express": "^6.0.0",
     "@nestjs/platform-fastify": "^6.2.4",
     "@nestjs/typeorm": "^6.1.1",
+    "@types/bcrypt": "^3.0.0",
+    "bcrypt": "^3.0.6",
     "pg": "^7.11.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
