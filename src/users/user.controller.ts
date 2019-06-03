@@ -1,6 +1,7 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { RegisterUserDto } from './dto/registerUserDto.dto';
 
 @Controller('user')
 export class UserController {
@@ -19,5 +20,16 @@ export class UserController {
         } else {
             throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
         }
+    }
+
+    @Post()
+    async registerUser(@Body() body: RegisterUserDto) {
+        const id: number = await this.userService.createNew(body.username, body.password,
+            body.email, body.location, body.countryCode);
+        const user: User = await this.userService.findOne(id);
+        return {
+            success: true,
+            ...user,
+        };
     }
 }
