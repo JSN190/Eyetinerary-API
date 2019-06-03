@@ -9,7 +9,7 @@ export class UserService {
     ) {}
 
     async findOne(id: number): Promise<User> {
-        return await this.repository.findOne(id);
+        return await this.repository.findOne({ id });
     }
 
     async createNew(username: string, password: string, email?: string,
