@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn,
     OneToMany} from 'typeorm';
 import { Itinerary } from '../itineraries/itinerary.entity';
 
-@Entity()
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -11,7 +11,7 @@ export class User {
     @Column({ length: 50})
     username: string;
 
-    @Column({ length: 72 })
+    @Column()
     password: string;
 
     @Column({length: 140, nullable: true })
