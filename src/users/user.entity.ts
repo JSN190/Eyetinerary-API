@@ -1,5 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn,
-    CreateDateColumn } from 'typeorm';
+    CreateDateColumn,
+    OneToMany} from 'typeorm';
+import { Itinerary } from '../itineraries/itinerary.entity';
 
 @Entity()
 export class User {
@@ -20,6 +22,9 @@ export class User {
 
     @Column({ length: 2, nullable: true })
     country: string;
+
+    @OneToMany(type => Itinerary, itinerary => itinerary.owner)
+    itineraries: Itinerary[];
 
     @CreateDateColumn()
     joined: number;
