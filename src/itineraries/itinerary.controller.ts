@@ -29,7 +29,10 @@ export class ItineraryController {
     // TODO: validation
     @Post()
     async createItinerary(@Body() body: CreateItineraryDto) {
-        const user: User = null; // TODO: get user based on token
+        const user: User = body.owner ? await this.userService.findOne(body.owner) : null;
+        if (!user && body.owner) {
+            throw new NotFoundException(`User ${body.owner} not found`, 'Not Found');
+        }
         const id: number = await this.itineraryService.createNew(body.title, user);
         const itinerary: Itinerary = await this.itineraryService.findOne(id);
         return {
