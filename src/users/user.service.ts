@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { Itinerary } from '../itineraries/itinerary.entity';
 
 @Injectable()
 export class UserService {
@@ -26,5 +27,11 @@ export class UserService {
             })
             .execute();
             return insertion.identifiers[0].id;
-        }
+    }
+
+    async getItineraries(id: number): Promise<Itinerary[]> {
+        const user: User = await this.repository.findOne({ id },
+            { relations: ['itineraries', 'itineraries.pages', 'itineraries.pages.items'] });
+        return user.itineraries;
+    }
 }

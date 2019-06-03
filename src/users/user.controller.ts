@@ -2,6 +2,7 @@ import { Controller, Get, Param, NotFoundException, Post, Body } from '@nestjs/c
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RegisterUserDto } from './dto/registerUserDto.dto';
+import { Itinerary } from 'src/itineraries/itinerary.entity';
 
 @Controller('user')
 export class UserController {
@@ -31,5 +32,18 @@ export class UserController {
             success: true,
             ...user,
         };
+    }
+
+    @Get(':id/itineraries')
+    async getItineraries(@Param() params) {
+        const itineraries: Itinerary[] = await this.userService.getItineraries(params.id);
+        if (itineraries) {
+            return {
+                success: true,
+                itineraries: itineraries.length >= 1 ? itineraries : [],
+            };
+        } else {
+            throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
+        }
     }
 }
