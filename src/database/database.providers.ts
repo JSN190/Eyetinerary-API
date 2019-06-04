@@ -1,4 +1,4 @@
-import { createConnection } from 'typeorm';
+import { createConnection, Connection } from 'typeorm';
 
 export const dbProviders = [
     {
@@ -15,5 +15,10 @@ export const dbProviders = [
                 __dirname + '/../**/*.entity{.ts,.js}',
             ],
         }),
+    },
+    {
+        provide: 'ENTITY_MANAGER',
+        useFactory: (connection: Connection) => connection.manager,
+        inject: ['DATABASE_CONNECTION'],
     },
 ];
