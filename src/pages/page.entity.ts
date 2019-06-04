@@ -14,7 +14,8 @@ export class Page {
     @Column({ nullable: true })
     itineraryId: number;
 
-    @ManyToOne(type => Itinerary, itinerary => itinerary.pages, { nullable: false })
+    @ManyToOne(type => Itinerary, itinerary => itinerary.pages,
+        { nullable: false, onDelete: 'CASCADE' })
     itinerary: Itinerary;
 
     @OneToMany(type => Item, item => item.page)
