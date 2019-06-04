@@ -10,7 +10,7 @@ export class Item {
     @Column({ nullable: true })
     pageId: number;
 
-    @ManyToOne(type => Page, page => page.items)
+    @ManyToOne(type => Page, page => page.items, { onDelete: 'CASCADE' })
     page: Page;
 
     @Column({ length: 140 })
