@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { User } from './user.entity';
 import { Itinerary } from '../itineraries/itinerary.entity';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
     constructor(
         @Inject('USER_REPOSITORY') private readonly repository: Repository<User>,
+        @Inject('ENTITY_MANAGER') private readonly entityManager: EntityManager,
     ) {}
 
     async findOne(id: number): Promise<User> {
@@ -35,6 +36,22 @@ export class UserService {
             })
             .execute();
             return insertion.identifiers[0].id;
+    }
+
+    async deleteOne(id: number): Promise<User> {
+        // Does not delete user's itineraries
+        const user: User = await this.repository.findOne({ id });
+        return await this.repository.remove(user);
+    }
+
+    async deleteOneWithItineraries(id: number): Promise<User> {
+        // Cascade not used in order to allow itinerary preservation with deleteOne
+        const user: User = await this.repository.findOne({ id });
+        await this.entityManager.transaction(async manager => {
+            await manager.delete(Itinerary, [...user.itineraries]);
+            await manager.delete(User, user);
+        });
+        return user;
     }
 
     async getItineraries(id: number): Promise<Itinerary[]> {
