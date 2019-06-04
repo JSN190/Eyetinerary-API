@@ -1,8 +1,9 @@
-import { Controller, Get, Param, NotFoundException, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RegisterUserDto } from './dto/registerUserDto.dto';
-import { Itinerary } from 'src/itineraries/itinerary.entity';
+import { Itinerary } from '../itineraries/itinerary.entity';
+import { DeleteUserDto } from '../users/dto/deleteUserDto.dto';
 
 @Controller('user')
 export class UserController {
@@ -32,6 +33,21 @@ export class UserController {
             success: true,
             ...user,
         };
+    }
+
+    @Delete(':id')
+    async deleteUser(@Param() params, @Body() body: DeleteUserDto) {
+        const deleted: User = body.deleteItineraries
+        ? await this.userService.deleteOneWithItineraries(params.id)
+        : await this.userService.deleteOne(params.id);
+        if (deleted) {
+            return {
+                success: true,
+                deleted: deleted.id,
+            };
+        } else {
+            throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
+        }
     }
 
     @Get(':id/itineraries')
