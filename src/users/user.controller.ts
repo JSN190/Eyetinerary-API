@@ -37,13 +37,13 @@ export class UserController {
 
     @Delete(':id')
     async deleteUser(@Param() params, @Body() body: DeleteUserDto) {
-        const deleted: User = body.deleteItineraries
+        const deleted: User = body && body.deleteItineraries
         ? await this.userService.deleteOneWithItineraries(params.id)
         : await this.userService.deleteOne(params.id);
         if (deleted) {
             return {
                 success: true,
-                deleted: deleted.id,
+                deleted,
             };
         } else {
             throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
