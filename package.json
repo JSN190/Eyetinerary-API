@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "author": "John Su",
+  "homepage": "https://github.com/Tyncture/Eyetinerary-API",
+  "repository": "github:Tyncture/Eyetinerary-API",
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
