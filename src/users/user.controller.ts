@@ -1,4 +1,5 @@
-import { Controller, Get, Param, NotFoundException, Post, Body, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body,
+    Delete, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RegisterUserDto } from './dto/registerUserDto.dto';

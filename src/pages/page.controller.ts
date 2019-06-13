@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Body, NotFoundException, BadRequestException, Post, Delete, UnauthorizedException, Req } from '@nestjs/common';
+import { Controller, Get, Param, Body, NotFoundException, BadRequestException,
+    Post, Delete, UnauthorizedException, Req } from '@nestjs/common';
 import { PageService } from './page.service';
 import { Page } from './page.entity';
 import { ItineraryService } from '../itineraries/itinerary.service';

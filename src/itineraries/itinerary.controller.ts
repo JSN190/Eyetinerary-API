@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Post, Body, NotFoundException, Delete, Req, UnauthorizedException, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, NotFoundException, Delete, Req,
+    UnauthorizedException, Patch } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
 import { CreateItineraryDto } from './dto/createItineraryDto.dto';
