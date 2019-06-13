@@ -16,6 +16,8 @@ export class ItineraryService {
       .addSelect('owner.id')
       .leftJoin('itinerary.owner', 'owner')
       .where('itinerary.id = :itineraryId', { itineraryId: id })
+      .leftJoinAndSelect('itinerary.pages', 'page')
+      .leftJoinAndSelect('page.items', 'item')
       .getOne();
   }
 
