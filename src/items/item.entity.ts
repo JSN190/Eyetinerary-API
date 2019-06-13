@@ -19,7 +19,7 @@ export class Item {
     @Column({ length: 1000 })
     body: string;
 
-    @Column({ type: 'timestamp', nullable: false })
+    @Column({ type: 'timestamp' })
     timeStart: Date;
 
     @Column({ type: 'timestamp', nullable: true })
