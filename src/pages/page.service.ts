@@ -21,4 +21,12 @@ export class PageService {
         .execute();
         return inserted.identifiers[0].id;
     }
+
+    async deleteOne(id: number): Promise<Page> {
+        const page: Page = await this.findOne(id);
+        if (page) {
+            this.repository.remove(page);
+        }
+        return page;
+    }
 }
