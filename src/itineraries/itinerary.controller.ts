@@ -7,11 +7,13 @@ import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { DeleteItineraryDto } from '../itineraries/dto/deleteItineraryDto.dto';
 import { EditItineraryDto } from './dto/editItineraryDto.dto';
+import { IntineraryAuth } from './itinerary.auth';
 
 @Controller('itinerary')
 export class ItineraryController {
     constructor(
         private readonly itineraryService: ItineraryService,
+        private readonly itineraryAuth: IntineraryAuth,
         private readonly authService: AuthService,
     ) {}
 
@@ -28,16 +30,15 @@ export class ItineraryController {
        }
     }
 
-    // TODO: complete implementation and test
-    // TODO: validation
     @Post()
     async createItinerary(@Body() body: CreateItineraryDto, @Req() req: Request) {
         const user: User = req.token ? await this.authService.authenticateByJwt(req.token) : null;
         if (!user && req.token) {
             throw new UnauthorizedException(`Token Invalid`, 'Token Invalid');
         }
-        const id: number = await this.itineraryService.createNew(body.title, user);
-        const itinerary: Itinerary = await this.itineraryService.findOne(id);
+        const itinerary: Itinerary = await this.itineraryService.createNew(body.title, user);
+        const editToken: string = await this.itineraryService.getEditToken(itinerary.id);
+        itinerary.editToken = editToken;
         return {
             success: true,
             ...itinerary,
@@ -52,9 +53,9 @@ export class ItineraryController {
         }
 
         if (body.editToken) {
-            this.verifyEditToken(body.editToken, itinerary);
+            await this.itineraryAuth.verifyEditToken(body.editToken, itinerary);
         } else if (req.token) {
-            await this.verifyOwnership(req.token, itinerary);
+            await this.itineraryAuth.verifyOwnership(req.token, itinerary);
         } else {
             throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
         }
@@ -74,9 +75,9 @@ export class ItineraryController {
         }
 
         if (body.editToken) {
-            this.verifyEditToken(body.editToken, itinerary);
+            await this.itineraryAuth.verifyEditToken(body.editToken, itinerary);
         } else if (req.token) {
-            await this.verifyOwnership(req.token, itinerary);
+            await this.itineraryAuth.verifyOwnership(req.token, itinerary);
         } else {
             throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
         }
@@ -86,21 +87,5 @@ export class ItineraryController {
             success: true,
             deleted,
         };
-    }
-
-    private verifyEditToken(editToken: string, itinerary: Itinerary) {
-        if (editToken !== itinerary.editToken) {
-            throw new UnauthorizedException('Invalid Edit Token', 'Invalid Edit Token');
-        }
-    }
-
-    private async verifyOwnership(token: string, itinerary: Itinerary) {
-        const user: User = await this.authService.authenticateByJwt(token);
-        if (!user ) {
-            throw new UnauthorizedException('Invalid Token', 'Invalid Token');
-        } else if (user.id !== itinerary.owner.id) {
-            throw new UnauthorizedException(
-            `${user.username} does not have permission to delete this itinerary`, 'Unauthorised');
-        }
     }
 }

@@ -11,7 +11,7 @@ export class Itinerary {
     @Column({ length: 140 })
     title: string;
 
-    @Column({ length: 140 })
+    @Column({ length: 140, select: false })
     editToken: string;
 
     @ManyToOne(type => User, { nullable: true })

@@ -18,13 +18,19 @@ export class ItineraryService {
         .getOne();
     }
 
-    async createNew(title: string, owner?: User): Promise<number> {
+    async getEditToken(id: number): Promise<string> {
+        const queryResult: Itinerary = await this.repository.findOne({ select: ['editToken'],
+        where: { id } });
+        return queryResult.editToken;
+    }
+
+    async createNew(title: string, owner?: User): Promise<Itinerary> {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()
         .values({ title, editToken: 'test', owner })
         .execute();
-        return inserted.identifiers[0].id;
+        return await this.findOne(inserted.identifiers[0].id);
     }
 
     async updateOne(id: number, title: string): Promise<Itinerary> {
