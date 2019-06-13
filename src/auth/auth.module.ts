@@ -7,7 +7,7 @@ import { AuthController } from './auth.controller';
 @Module({
     imports: [
         JwtModule.register({
-          secretOrPrivateKey: 'changeToEnv',
+          secretOrPrivateKey: process.env.EYET_JWTSECRET,
           signOptions: {
             expiresIn: 259200,
           },
