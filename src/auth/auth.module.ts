@@ -9,6 +9,9 @@ import { AuthController } from './auth.controller';
         JwtModule.registerAsync({
           useFactory: async () => ({
               secret: process.env.EYET_JWTSECRET,
+              signOptions: {
+                expiresIn: '3d',
+              },
           }),
         }),
         UserModule,
