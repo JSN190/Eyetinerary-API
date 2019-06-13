@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, Post, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body, BadRequestException, Delete } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { Item } from './item.entity';
 import { PageService } from '../pages/page.service';
@@ -41,6 +41,19 @@ export class ItemController {
         } else {
             throw new BadRequestException(`Page ${body.page} not found`,
             'Page Not Found');
+        }
+    }
+
+    @Delete(':id')
+    async deleteItem(@Param() params) {
+        const deleted = await this.itemService.deleteOne(params.id);
+        if (deleted) {
+            return {
+                success: true,
+                deleted,
+            };
+        } else {
+            throw new NotFoundException(`Item ${params.id} not found`, 'Item Not Found');
         }
     }
 }
