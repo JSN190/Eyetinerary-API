@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Body, NotFoundException, BadRequestException, Post } from '@nestjs/common';
+import { Controller, Get, Param, Body, NotFoundException, BadRequestException, Post, Delete } from '@nestjs/common';
 import { PageService } from './page.service';
 import { Page } from './page.entity';
 import { ItineraryService } from '../itineraries/itinerary.service';
@@ -38,6 +38,19 @@ export class PageController {
         } else {
             throw new BadRequestException(`Itinerary ${body.itinerary} not found`,
             'Itinerary Not Found');
+        }
+    }
+
+    @Delete(':id')
+    async deletePage(@Param() params) {
+        const deleted = await this.pageService.deleteOne(params.id);
+        if (deleted) {
+            return {
+                success: true,
+                deleted,
+            };
+        } else {
+            throw new NotFoundException(`Page ${params.id} not found`, 'Page Not Found');
         }
     }
 }
