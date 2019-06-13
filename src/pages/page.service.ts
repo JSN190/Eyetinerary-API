@@ -19,13 +19,13 @@ export class PageService {
         .getOne();
     }
 
-    async createNew(title: string, itinerary: Itinerary): Promise<number> {
+    async createNew(title: string, itinerary: Itinerary): Promise<Page> {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()
         .values({ title, itinerary })
         .execute();
-        return inserted.identifiers[0].id;
+        return await this.findOne(inserted.identifiers[0].id);
     }
 
     async updateOne(id: number, title: string): Promise<Page> {
