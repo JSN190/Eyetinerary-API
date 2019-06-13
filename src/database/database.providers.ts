@@ -5,11 +5,11 @@ export const dbProviders = [
         provide: 'DATABASE_CONNECTION',
         useFactory: async () => await createConnection({
             type: 'postgres',
-            host: 'localhost',
-            port: 5432,
-            username: 'eyetinerary',
-            password: 'eyetinerary',
-            database: 'eyetinerary',
+            host: process.env.EYET_PGHOST,
+            port: Number(process.env.EYET_PGPORT),
+            username: process.env.EYET_PGUSERNAME,
+            password: process.env.EYET_PGPASSWORD,
+            database: process.env.EYET_PGDATABASE,
             synchronize: true,
             entities: [
                 __dirname + '/../**/*.entity{.ts,.js}',
