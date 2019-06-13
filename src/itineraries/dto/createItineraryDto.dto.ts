@@ -1,4 +1,4 @@
-import { IsDefined, IsAscii, IsPositive } from 'class-validator';
+import { IsDefined, IsAscii } from 'class-validator';
 
 export class CreateItineraryDto {
   @IsDefined()
