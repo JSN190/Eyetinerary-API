@@ -43,7 +43,7 @@ export class PageController {
 
     @Delete(':id')
     async deletePage(@Param() params) {
-        const deleted = await this.pageService.deleteOne(params.id);
+        const deleted: Page = await this.pageService.deleteOne(params.id);
         if (deleted) {
             return {
                 success: true,

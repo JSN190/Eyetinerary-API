@@ -46,7 +46,7 @@ export class ItemController {
 
     @Delete(':id')
     async deleteItem(@Param() params) {
-        const deleted = await this.itemService.deleteOne(params.id);
+        const deleted: Item = await this.itemService.deleteOne(params.id);
         if (deleted) {
             return {
                 success: true,
