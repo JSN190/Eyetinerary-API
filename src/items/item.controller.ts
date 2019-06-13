@@ -21,7 +21,7 @@ export class ItemController {
                 ...item,
             };
         } else {
-            throw new NotFoundException(`Item ${params.id} not found`, 'Not Found');
+            throw new NotFoundException(`Item ${params.id} not found`, 'Item Not Found');
         }
     }
 
