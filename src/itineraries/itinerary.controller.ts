@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, NotFoundException, Delete, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, NotFoundException, Delete, Req, UnauthorizedException, Patch } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
 import { CreateItineraryDto } from './dto/createItineraryDto.dto';
@@ -6,6 +6,7 @@ import { User } from '../users/user.entity';
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { DeleteItineraryDto } from '../itineraries/dto/deleteItineraryDto.dto';
+import { EditItineraryDto } from './dto/editItineraryDto.dto';
 
 @Controller('itinerary')
 export class ItineraryController {
@@ -40,6 +41,28 @@ export class ItineraryController {
         return {
             success: true,
             ...itinerary,
+        };
+    }
+
+    @Patch(':id')
+    async editItinerary(@Param() params, @Body() body: EditItineraryDto, @Req() req) {
+        const itinerary: Itinerary = await this.itineraryService.findOne(params.id);
+        if (!itinerary) {
+            throw new NotFoundException(`Itinerary ${params.id} not found`, 'Itinerary Not Found');
+        }
+
+        if (body.editToken) {
+            this.verifyEditToken(body.editToken, itinerary);
+        } else if (req.token) {
+            await this.verifyOwnership(req.token, itinerary);
+        } else {
+            throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
+        }
+
+        const updated: Itinerary = await this.itineraryService.updateOne(params.id, body.title);
+        return {
+            success: true,
+            updated,
         };
     }
 

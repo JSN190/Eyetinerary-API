@@ -27,6 +27,15 @@ export class ItineraryService {
         return inserted.identifiers[0].id;
     }
 
+    async updateOne(id: number, title: string): Promise<Itinerary> {
+        const itinerary = await this.findOne(id);
+        if (itinerary) {
+            itinerary.title = title;
+            this.repository.save(itinerary);
+        }
+        return itinerary;
+    }
+
     async deleteOne(id: number): Promise<Itinerary> {
         const itinerary: Itinerary = await this.findOne(id);
         if (itinerary) {
