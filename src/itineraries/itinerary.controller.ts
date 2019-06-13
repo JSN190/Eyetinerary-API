@@ -21,7 +21,7 @@ export class ItineraryController {
                 ...item,
             };
        } else {
-           throw new NotFoundException(`Itinerary ${params.id} not found`, 'Not Found');
+           throw new NotFoundException(`Itinerary ${params.id} not found`, 'Itinerary Not Found');
        }
     }
 
@@ -31,7 +31,7 @@ export class ItineraryController {
     async createItinerary(@Body() body: CreateItineraryDto) {
         const user: User = body.owner ? await this.userService.findOne(body.owner) : null;
         if (!user && body.owner) {
-            throw new NotFoundException(`User ${body.owner} not found`, 'Not Found');
+            throw new NotFoundException(`User ${body.owner} not found`, 'User Not Found');
         }
         const id: number = await this.itineraryService.createNew(body.title, user);
         const itinerary: Itinerary = await this.itineraryService.findOne(id);
