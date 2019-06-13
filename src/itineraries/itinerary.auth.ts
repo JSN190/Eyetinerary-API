@@ -24,7 +24,7 @@ export class IntineraryAuth {
             throw new UnauthorizedException('Invalid Token', 'Invalid Token');
         } else if (user.id !== itinerary.owner.id) {
             throw new UnauthorizedException(
-            `${user.username} does not have permission to edit itinerary ${JSON.stringify(itinerary)}`, 'Unauthorised');
+            `${user.username} does not have permission to edit itinerary ${itinerary.id}`, 'Unauthorised');
         }
     }
 }
