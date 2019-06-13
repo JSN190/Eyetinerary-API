@@ -1,4 +1,4 @@
-import { IsDefined, IsAscii, IsPositive } from "class-validator";
+import { IsDefined, IsAscii, IsPositive } from 'class-validator';
 
 export class CreatePageDto {
     @IsDefined()
