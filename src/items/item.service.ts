@@ -28,4 +28,12 @@ export class ItemService {
         .execute();
         return inserted.identifiers[0].id;
     }
+
+    async deleteOne(id: number): Promise<Item> {
+        const item: Item = await this.findOne(id);
+        if (item) {
+            await this.repository.remove(item);
+        }
+        return item;
+    }
 }
