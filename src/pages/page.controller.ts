@@ -33,8 +33,7 @@ export class PageController {
     async createPage(@Body() body: CreatePageDto) {
         const itinerary: Itinerary = await this.itineraryService.findOne(body.itinerary);
         if (itinerary) {
-            const id: number = await this.pageService.createNew(body.title, itinerary);
-            const page: Page = await this.pageService.findOne(id);
+            const page: Page = await this.pageService.createNew(body.title, itinerary);
             return {
                 success: true,
                 ...page,
