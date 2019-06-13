@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: console });
   app.useGlobalPipes(new ValidationPipe());
   app.use(helmet());
-  await app.listen(3000);
+  await app.listen(process.env.EYET_PORT);
 }
 
 dotenv.config();
