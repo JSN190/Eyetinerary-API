@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn,
     CreateDateColumn,
-    OneToMany} from 'typeorm';
+    OneToMany,
+    Index} from 'typeorm';
 import { Itinerary } from '../itineraries/itinerary.entity';
 
 @Entity('users')
@@ -8,6 +9,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Index({ unique: true })
     @Column({ length: 50, unique: true })
     username: string;
 
