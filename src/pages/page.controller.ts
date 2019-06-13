@@ -21,7 +21,7 @@ export class PageController {
                 ...page,
             };
         } else {
-            throw new NotFoundException(`Page ${params.id} not found`, 'Not Found');
+            throw new NotFoundException(`Page ${params.id} not found`, 'Page Not Found');
         }
     }
 
