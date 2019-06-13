@@ -15,6 +15,10 @@ export class UserService {
         return await this.repository.findOne({ id });
     }
 
+    async findOneByUsername(username: string): Promise<User> {
+        return await this.repository.findOne({ username });
+    }
+
     async getHashedPassword(id: number): Promise<string> {
         const queryResult: User = await this.repository.findOne({ select: ['id', 'password'],
         where: { id } });
