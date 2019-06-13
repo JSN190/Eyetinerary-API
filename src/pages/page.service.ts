@@ -12,8 +12,9 @@ export class PageService {
     async findOne(id: number): Promise<Page> {
         return await this.repository
         .createQueryBuilder('page')
-        .addSelect(['itinerary.id', 'itinerary.ownerId'])
+        .addSelect(['itinerary.id', 'owner.id'])
         .leftJoin('page.itinerary', 'itinerary')
+        .leftJoin('itinerary.owner', 'owner')
         .where('page.id = :pageId', { pageId: id })
         .getOne();
     }

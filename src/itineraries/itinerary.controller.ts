@@ -75,7 +75,7 @@ export class ItineraryController {
         const user: User = await this.authService.authenticateByJwt(token);
         if (!user ) {
             throw new UnauthorizedException('Invalid Token', 'Invalid Token');
-        } else if (user.id !== itinerary.ownerId) {
+        } else if (user.id !== itinerary.owner.id) {
             throw new UnauthorizedException(
             `${user.username} does not have permission to delete this itinerary`, 'Unauthorised');
         }

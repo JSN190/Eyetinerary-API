@@ -12,9 +12,10 @@ export class ItemService {
     async findOne(id: number): Promise<Item> {
         return await this.repository
         .createQueryBuilder('item')
-        .addSelect(['page.id', 'itinerary.id', 'itinerary.ownerId'])
+        .addSelect(['page.id', 'itinerary.id', 'owner.id'])
         .leftJoin('item.page', 'page')
         .leftJoin('page.itinerary', 'itinerary')
+        .leftJoin('itinerary.owner', 'owner')
         .where('item.id = :itemId', { itemId: id })
         .getOne();
     }

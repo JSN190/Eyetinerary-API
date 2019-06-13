@@ -14,9 +14,6 @@ export class Itinerary {
     @Column({ length: 140 })
     editToken: string;
 
-    @Column({ nullable: true })
-    ownerId: number;
-
     @ManyToOne(type => User, { nullable: true })
     owner: User;
 
