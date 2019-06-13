@@ -3,6 +3,7 @@ import { UserService } from '../users/user.service';
 import { User } from '../users/user.entity';
 import { JwtPayloadDto } from './dto/JwtPayloadDto.dto';
 import { JwtService } from '@nestjs/jwt';
+import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -24,8 +25,12 @@ export class AuthService {
         return null;
     }
 
-    async authenticateByJwtPayload(payload: JwtPayloadDto): Promise<User> {
-        return await this.userService.findOne(payload.id);
+    async authenticateByJwt(token: string): Promise<User> {
+        const payload = this.jwtService.decode(token) as JwtPayloadDto;
+        if (payload) {
+            return await this.userService.findOne(payload.id);
+        }
+        return null;
     }
 
     async grantJwtToken(id: number): Promise<string> {

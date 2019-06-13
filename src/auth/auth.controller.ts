@@ -19,7 +19,7 @@ export class AuthController {
                 token: await this.authService.grantJwtToken(user.id),
             };
         } else {
-            throw new UnauthorizedException('Password Invalid', 'Password Invalid');
+            throw new UnauthorizedException('Invalid Login', 'Invalid Login');
         }
     }
 }
