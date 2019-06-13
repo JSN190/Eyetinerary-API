@@ -5,6 +5,7 @@ import { CreateItineraryDto } from './dto/createItineraryDto.dto';
 import { User } from '../users/user.entity';
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
+import { DeleteItineraryDto } from '../itineraries/dto/deleteItineraryDto.dto';
 
 @Controller('itinerary')
 export class ItineraryController {
@@ -43,15 +44,40 @@ export class ItineraryController {
     }
 
     @Delete(':id')
-    async deleteItinerary(@Param() params) {
-        const deleted: Itinerary = await this.itineraryService.deleteOne(params.id);
-        if (deleted) {
-            return {
-                success: true,
-                deleted,
-            };
-        } else {
+    async deleteItinerary(@Param() params, @Body() body: DeleteItineraryDto, @Req() req) {
+        const itinerary: Itinerary = await this.itineraryService.findOne(params.id);
+        if (!itinerary) {
             throw new NotFoundException(`Itinerary ${params.id} not found`, 'Itinerary Not Found');
+        }
+
+        if (body.editToken) {
+            this.verifyEditToken(body.editToken, itinerary);
+        } else if (req.token) {
+            await this.verifyOwnership(req.token, itinerary);
+        } else {
+            throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
+        }
+
+        await this.itineraryService.deleteOne(params.id);
+        return {
+            success: true,
+            deleted: itinerary,
+        };
+    }
+
+    private verifyEditToken(editToken: string, itinerary: Itinerary) {
+        if (editToken !== itinerary.editToken) {
+            throw new UnauthorizedException('Invalid Edit Token', 'Invalid Edit Token');
+        }
+    }
+
+    private async verifyOwnership(token: string, itinerary: Itinerary) {
+        const user: User = await this.authService.authenticateByJwt(token);
+        if (!user ) {
+            throw new UnauthorizedException('Invalid Token', 'Invalid Token');
+        } else if (user.id !== itinerary.ownerId) {
+            throw new UnauthorizedException(
+            `${user.username} does not have permission to delete this itinerary`, 'Unauthorised');
         }
     }
 }
