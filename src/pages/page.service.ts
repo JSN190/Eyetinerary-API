@@ -28,6 +28,15 @@ export class PageService {
         return inserted.identifiers[0].id;
     }
 
+    async updateOne(id: number, title: string): Promise<Page> {
+        const page: Page = await this.findOne(id);
+        if (page) {
+            page.title = title;
+            this.repository.save(page);
+        }
+        return page;
+    }
+
     async deleteOne(id: number): Promise<Page> {
         const page: Page = await this.findOne(id);
         if (page) {
