@@ -21,7 +21,7 @@ export class ItemService {
     }
 
     async createNew(title: string, body: string, page: Page, timeStart: Date, timeEnd?: Date)
-    : Promise<number> {
+    : Promise<Item> {
         const inserted = await this.repository
         .createQueryBuilder()
         .insert()
@@ -33,7 +33,7 @@ export class ItemService {
             timeEnd,
          })
         .execute();
-        return inserted.identifiers[0].id;
+        return await this.findOne(inserted.identifiers[0].id);
     }
 
     async deleteOne(id: number): Promise<Item> {
