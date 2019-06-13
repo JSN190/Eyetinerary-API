@@ -36,6 +36,20 @@ export class ItemService {
         return await this.findOne(inserted.identifiers[0].id);
     }
 
+    async updateOne(id: number, payload: { title?: string, body?: string }) {
+        const item: Item = await this.findOne(id);
+        if (item) {
+            if (payload.title) {
+                item.title = payload.title;
+            }
+            if (payload.body) {
+                item.body = payload.body;
+            }
+            this.repository.save(item);
+        }
+        return item;
+    }
+
     async deleteOne(id: number): Promise<Item> {
         const item: Item = await this.findOne(id);
         if (item) {
