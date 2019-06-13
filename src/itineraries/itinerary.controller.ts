@@ -81,10 +81,10 @@ export class ItineraryController {
             throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
         }
 
-        await this.itineraryService.deleteOne(params.id);
+        const deleted = await this.itineraryService.deleteOne(params.id);
         return {
             success: true,
-            deleted: itinerary,
+            deleted,
         };
     }
 
