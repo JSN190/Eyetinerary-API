@@ -1,15 +1,16 @@
-import { Controller, Get, Param, Post, Body, NotFoundException, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, NotFoundException, Delete, Req, UnauthorizedException } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
 import { CreateItineraryDto } from './dto/createItineraryDto.dto';
 import { User } from '../users/user.entity';
-import { UserService } from '../users/user.service';
+import { Request } from 'express';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('itinerary')
 export class ItineraryController {
     constructor(
         private readonly itineraryService: ItineraryService,
-        private readonly userService: UserService,
+        private readonly authService: AuthService,
     ) {}
 
     @Get(':id')
@@ -28,10 +29,10 @@ export class ItineraryController {
     // TODO: complete implementation and test
     // TODO: validation
     @Post()
-    async createItinerary(@Body() body: CreateItineraryDto) {
-        const user: User = body.owner ? await this.userService.findOne(body.owner) : null;
-        if (!user && body.owner) {
-            throw new NotFoundException(`User ${body.owner} not found`, 'User Not Found');
+    async createItinerary(@Body() body: CreateItineraryDto, @Req() req: Request) {
+        const user: User = req.token ? await this.authService.authenticateByJwt(req.token) : null;
+        if (!user && req.token) {
+            throw new UnauthorizedException(`Token Invalid`, 'Token Invalid');
         }
         const id: number = await this.itineraryService.createNew(body.title, user);
         const itinerary: Itinerary = await this.itineraryService.findOne(id);
