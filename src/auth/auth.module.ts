@@ -6,11 +6,10 @@ import { AuthController } from './auth.controller';
 
 @Module({
     imports: [
-        JwtModule.register({
-          secretOrPrivateKey: process.env.EYET_JWTSECRET,
-          signOptions: {
-            expiresIn: 259200,
-          },
+        JwtModule.registerAsync({
+          useFactory: async () => ({
+              secret: process.env.EYET_JWTSECRET,
+          }),
         }),
         UserModule,
     ],
