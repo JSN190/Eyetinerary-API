@@ -21,4 +21,12 @@ export class ItineraryService {
         .execute();
         return inserted.identifiers[0].id;
     }
+
+    async deleteOne(id: number): Promise<Itinerary> {
+        const itinerary: Itinerary = await this.findOne(id);
+        if (itinerary) {
+            this.repository.remove(itinerary);
+        }
+        return itinerary;
+    }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, HttpException, HttpStatus, Post, Body, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, NotFoundException, Delete } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
 import { CreateItineraryDto } from './dto/createItineraryDto.dto';
@@ -39,5 +39,18 @@ export class ItineraryController {
             success: true,
             ...itinerary,
         };
+    }
+
+    @Delete(':id')
+    async deleteItinerary(@Param() params) {
+        const deleted: Itinerary = await this.itineraryService.deleteOne(params.id);
+        if (deleted) {
+            return {
+                success: true,
+                deleted,
+            };
+        } else {
+            throw new NotFoundException(`Itinerary ${params.id} not found`, 'Itinerary Not Found');
+        }
     }
 }
