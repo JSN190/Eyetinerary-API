@@ -34,9 +34,8 @@ export class ItemController {
         const timeStart: Date = new Date(body.timeStart);
         const timeEnd: Date = body.timeEnd ? new Date(body.timeEnd) : null;
         if (page) {
-            const id: number = await this.itemService.createNew(body.title, body.body,
+            const item: Item = await this.itemService.createNew(body.title, body.body,
                 page, timeStart, timeEnd);
-            const item: Item = await this.itemService.findOne(id);
             return {
                 success: true,
                 ...item,
