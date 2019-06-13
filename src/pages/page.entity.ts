@@ -11,9 +11,6 @@ export class Page {
     @Column({ length: 100 })
     title: string;
 
-    @Column({ nullable: true })
-    itineraryId: number;
-
     @ManyToOne(type => Itinerary, itinerary => itinerary.pages,
         { nullable: false, onDelete: 'CASCADE' })
     itinerary: Itinerary;
