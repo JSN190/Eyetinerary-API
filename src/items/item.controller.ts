@@ -48,6 +48,29 @@ export class ItemController {
         }
     }
 
+    @Patch(':id')
+    async editItem(@Param() params, @Body() body: EditItemDto, @Req() req) {
+        const item: Item = await this.itemService.findOne(params.id);
+        if (!item) {
+            throw new NotFoundException(`Item ${params.id} not found`, 'Item Not Found');
+        }
+
+        if (body.editToken) {
+            await this.itineraryAuth.verifyEditToken(body.editToken, item.page.itinerary);
+        } else if (req.token) {
+            await this.itineraryAuth.verifyOwnership(req.token, item.page.itinerary);
+        } else {
+            throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
+        }
+
+        const updated: Item = await this.itemService.updateOne(params.id,
+            { title: body.title, body: body.body });
+        return {
+            success: true,
+            updated,
+        };
+    }
+
     @Delete(':id')
     async deleteItem(@Param() params, @Body() body: DeleteItemDto, @Req() req) {
         const item: Item = await this.itemService.findOne(params.id);
