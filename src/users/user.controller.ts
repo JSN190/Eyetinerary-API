@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, Post, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body, Delete, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RegisterUserDto } from './dto/registerUserDto.dto';
@@ -26,13 +26,18 @@ export class UserController {
 
     @Post()
     async registerUser(@Body() body: RegisterUserDto) {
-        const id: number = await this.userService.createNew(body.username, body.password,
-            body.email, body.location, body.countryCode);
-        const user: User = await this.userService.findOne(id);
-        return {
-            success: true,
-            ...user,
-        };
+        const usernameTaken = await this.userService.findOneByUsername(body.username);
+        if (usernameTaken) {
+            throw new BadRequestException(`Username ${body.username} taken`, 'Username Taken');
+        } else {
+            const id: number = await this.userService.createNew(body.username, body.password,
+                body.email, body.location, body.countryCode);
+            const user: User = await this.userService.findOne(id);
+            return {
+                success: true,
+                ...user,
+            };
+        }
     }
 
     @Delete(':id')
