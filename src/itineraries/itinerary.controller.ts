@@ -92,6 +92,7 @@ export class ItineraryController {
       params.id,
       body.title,
     );
+
     return {
       success: true,
       updated,

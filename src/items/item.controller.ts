@@ -94,6 +94,7 @@ export class ItemController {
       title: body.title,
       body: body.body,
     });
+
     return {
       success: true,
       updated,
