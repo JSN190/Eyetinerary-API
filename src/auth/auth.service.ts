@@ -3,7 +3,6 @@ import { UserService } from '../users/user.service';
 import { User } from '../users/user.entity';
 import { JwtPayloadDto } from './dto/JwtPayloadDto.dto';
 import { JwtService } from '@nestjs/jwt';
-import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
