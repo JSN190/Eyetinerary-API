@@ -16,6 +16,7 @@ export class PageService {
       .leftJoin('page.itinerary', 'itinerary')
       .leftJoin('itinerary.owner', 'owner')
       .where('page.id = :pageId', { pageId: id })
+      .leftJoinAndSelect('page.items', 'item')
       .getOne();
   }
 
