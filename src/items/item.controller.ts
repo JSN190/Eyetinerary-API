@@ -1,11 +1,13 @@
 import { Controller, Get, Param, NotFoundException, Post, Body, BadRequestException,
-    Delete, Req, UnauthorizedException } from '@nestjs/common';
+    Delete, Req, UnauthorizedException, Patch } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { Item } from './item.entity';
 import { PageService } from '../pages/page.service';
 import { Page } from '../pages/page.entity';
 import { CreateItemDto } from './dto/createItemDto.dto';
 import { IntineraryAuth } from '../itineraries/itinerary.auth';
+import { DeleteItemDto } from './dto/deleteItemDto.dto';
+import { EditItemDto } from './dto/editItemDto.dto';
 
 @Controller('item')
 export class ItemController {
@@ -47,7 +49,7 @@ export class ItemController {
     }
 
     @Delete(':id')
-    async deleteItem(@Param() params, @Body() body, @Req() req) {
+    async deleteItem(@Param() params, @Body() body: DeleteItemDto, @Req() req) {
         const item: Item = await this.itemService.findOne(params.id);
         if (!item) {
             throw new NotFoundException(`Item ${params.id} not found`, 'Item Not Found');
@@ -61,7 +63,7 @@ export class ItemController {
             throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
         }
 
-        const deleted = await this.itemService.deleteOne(params.id);
+        const deleted: Item = await this.itemService.deleteOne(params.id);
         return {
             success: true,
             deleted,
