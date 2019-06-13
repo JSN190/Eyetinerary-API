@@ -4,7 +4,7 @@ import { PageService } from './page.service';
 import { Page } from './page.entity';
 import { ItineraryService } from '../itineraries/itinerary.service';
 import { Itinerary } from '../itineraries/itinerary.entity';
-import { CreatePageDto } from './dto/createPage.dto';
+import { CreatePageDto } from './dto/createPageDto.dto';
 import { IntineraryAuth } from '../itineraries/itinerary.auth';
 import { DeletePageDto } from './dto/deletePageDto.dto';
 import { EditPageDto } from './dto/editPageDto.dto';
