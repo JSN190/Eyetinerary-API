@@ -60,7 +60,7 @@ export class PageController {
             throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
         }
 
-        const updated = await this.pageService.updateOne(page.id, body.title);
+        const updated: Page = await this.pageService.updateOne(page.id, body.title);
         return {
             success: true,
             updated,
@@ -82,7 +82,7 @@ export class PageController {
             throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
         }
 
-        const deleted = await this.pageService.deleteOne(params.id);
+        const deleted: Page = await this.pageService.deleteOne(params.id);
         return {
             success: true,
             deleted,
