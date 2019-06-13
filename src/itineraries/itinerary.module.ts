@@ -8,18 +8,9 @@ import { AuthModule } from '../auth/auth.module';
 import { IntineraryAuth } from './itinerary.auth';
 
 @Module({
-    imports: [DatabaseModule, UserModule, AuthModule],
-    providers: [
-        ...itineraryProviders,
-        ItineraryService,
-        IntineraryAuth,
-    ],
-    exports: [
-        ...itineraryProviders,
-        ItineraryService,
-        IntineraryAuth,
-    ],
-    controllers: [ ItineraryController ],
+  imports: [DatabaseModule, UserModule, AuthModule],
+  providers: [...itineraryProviders, ItineraryService, IntineraryAuth],
+  exports: [...itineraryProviders, ItineraryService, IntineraryAuth],
+  controllers: [ItineraryController],
 })
-
 export class ItineraryModule {}

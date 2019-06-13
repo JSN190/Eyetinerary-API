@@ -1,5 +1,16 @@
-import { Controller, Get, Param, Body, NotFoundException, BadRequestException,
-    Post, Delete, UnauthorizedException, Req, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Body,
+  NotFoundException,
+  BadRequestException,
+  Post,
+  Delete,
+  UnauthorizedException,
+  Req,
+  Patch,
+} from '@nestjs/common';
 import { PageService } from './page.service';
 import { Page } from './page.entity';
 import { ItineraryService } from '../itineraries/itinerary.service';
@@ -11,81 +22,97 @@ import { EditPageDto } from './dto/editPageDto.dto';
 
 @Controller('page')
 export class PageController {
-    constructor(
-        private readonly pageService: PageService,
-        private readonly itineraryService: ItineraryService,
-        private readonly itineraryAuth: IntineraryAuth,
-    ) {}
+  constructor(
+    private readonly pageService: PageService,
+    private readonly itineraryService: ItineraryService,
+    private readonly itineraryAuth: IntineraryAuth,
+  ) {}
 
-    @Get(':id')
-    async getPage(@Param() params) {
-        const page: Page = await this.pageService.findOne(params.id);
-        if (page) {
-            return {
-                success: true,
-                ...page,
-            };
-        } else {
-            throw new NotFoundException(`Page ${params.id} not found`, 'Page Not Found');
-        }
+  @Get(':id')
+  async getPage(@Param() params) {
+    const page: Page = await this.pageService.findOne(params.id);
+    if (page) {
+      return {
+        success: true,
+        ...page,
+      };
+    } else {
+      throw new NotFoundException(
+        `Page ${params.id} not found`,
+        'Page Not Found',
+      );
+    }
+  }
+
+  @Post()
+  async createPage(@Body() body: CreatePageDto) {
+    const itinerary: Itinerary = await this.itineraryService.findOne(
+      body.itinerary,
+    );
+    if (itinerary) {
+      const page: Page = await this.pageService.createNew(
+        body.title,
+        itinerary,
+      );
+      return {
+        success: true,
+        ...page,
+      };
+    } else {
+      throw new BadRequestException(
+        `Itinerary ${body.itinerary} not found`,
+        'Itinerary Not Found',
+      );
+    }
+  }
+
+  @Patch(':id')
+  async editPage(@Param() params, @Body() body: EditPageDto, @Req() req) {
+    const page: Page = await this.pageService.findOne(params.id);
+    if (!page) {
+      throw new NotFoundException(
+        `Page ${params.id} not found`,
+        'Page Not Found',
+      );
     }
 
-    @Post()
-    async createPage(@Body() body: CreatePageDto) {
-        const itinerary: Itinerary = await this.itineraryService.findOne(body.itinerary);
-        if (itinerary) {
-            const page: Page = await this.pageService.createNew(body.title, itinerary);
-            return {
-                success: true,
-                ...page,
-            };
-        } else {
-            throw new BadRequestException(`Itinerary ${body.itinerary} not found`,
-            'Itinerary Not Found');
-        }
+    if (body.editToken) {
+      await this.itineraryAuth.verifyEditToken(body.editToken, page.itinerary);
+    } else if (req.token) {
+      await this.itineraryAuth.verifyOwnership(req.token, page.itinerary);
+    } else {
+      throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
     }
 
-    @Patch(':id')
-    async editPage(@Param() params, @Body() body: EditPageDto, @Req() req) {
-        const page: Page = await this.pageService.findOne(params.id);
-        if (!page) {
-            throw new NotFoundException(`Page ${params.id} not found`, 'Page Not Found');
-        }
+    const updated: Page = await this.pageService.updateOne(page.id, body.title);
+    return {
+      success: true,
+      updated,
+    };
+  }
 
-        if (body.editToken) {
-            await this.itineraryAuth.verifyEditToken(body.editToken, page.itinerary);
-        } else if (req.token) {
-            await this.itineraryAuth.verifyOwnership(req.token, page.itinerary);
-        } else {
-            throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
-        }
-
-        const updated: Page = await this.pageService.updateOne(page.id, body.title);
-        return {
-            success: true,
-            updated,
-        };
+  @Delete(':id')
+  async deletePage(@Param() params, @Body() body: DeletePageDto, @Req() req) {
+    const page: Page = await this.pageService.findOne(params.id);
+    if (!page) {
+      throw new NotFoundException(
+        `Page ${params.id} not found`,
+        'Page Not Found',
+      );
     }
 
-    @Delete(':id')
-    async deletePage(@Param() params, @Body() body: DeletePageDto, @Req() req) {
-        const page: Page = await this.pageService.findOne(params.id);
-        if (!page) {
-            throw new NotFoundException(`Page ${params.id} not found`, 'Page Not Found');
-        }
-
-        if (body.editToken) {
-            await this.itineraryAuth.verifyEditToken(body.editToken, page.itinerary);
-        } else if (req.token) {
-            await this.itineraryAuth.verifyOwnership(req.token, page.itinerary);
-        } else {
-            throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
-        }
-
-        const deleted: Page = await this.pageService.deleteOne(params.id);
-        return {
-            success: true,
-            deleted,
-        };
+    if (body.editToken) {
+      await this.itineraryAuth.verifyEditToken(body.editToken, page.itinerary);
+    } else if (req.token) {
+      await this.itineraryAuth.verifyOwnership(req.token, page.itinerary);
+    } else {
+      throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
     }
+
+    const deleted: Page = await this.pageService.deleteOne(params.id);
+    return {
+      success: true,
+      deleted,
+    };
+  }
 }

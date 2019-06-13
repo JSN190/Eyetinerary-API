@@ -5,21 +5,19 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 
 @Module({
-    imports: [
-        JwtModule.registerAsync({
-          useFactory: async () => ({
-              secret: process.env.EYET_JWTSECRET,
-              signOptions: {
-                expiresIn: '3d',
-              },
-          }),
-        }),
-        UserModule,
-    ],
-    providers: [
-        AuthService,
-    ],
-    exports: [AuthService],
-    controllers: [AuthController],
+  imports: [
+    JwtModule.registerAsync({
+      useFactory: async () => ({
+        secret: process.env.EYET_JWTSECRET,
+        signOptions: {
+          expiresIn: '3d',
+        },
+      }),
+    }),
+    UserModule,
+  ],
+  providers: [AuthService],
+  exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

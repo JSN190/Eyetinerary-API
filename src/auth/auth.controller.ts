@@ -5,21 +5,21 @@ import { LoginDto } from './dto/loginDto.dto';
 
 @Controller()
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService,
-    ) {}
+  constructor(private readonly authService: AuthService) {}
 
-    @Post('login')
-    async login(@Body() body: LoginDto) {
-        const user: User = await this.authService.authenticateByPassword(body.username,
-            body.password);
-        if (user) {
-            return {
-                success: true,
-                token: await this.authService.grantJwtToken(user.id),
-            };
-        } else {
-            throw new UnauthorizedException('Invalid Login', 'Invalid Login');
-        }
+  @Post('login')
+  async login(@Body() body: LoginDto) {
+    const user: User = await this.authService.authenticateByPassword(
+      body.username,
+      body.password,
+    );
+    if (user) {
+      return {
+        success: true,
+        token: await this.authService.grantJwtToken(user.id),
+      };
+    } else {
+      throw new UnauthorizedException('Invalid Login', 'Invalid Login');
     }
+  }
 }

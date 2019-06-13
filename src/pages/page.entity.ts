@@ -1,26 +1,35 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne,
-    CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Item } from '../items/item.entity';
 import { Itinerary } from '../itineraries/itinerary.entity';
 
 @Entity()
 export class Page {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ length: 100 })
-    title: string;
+  @Column({ length: 100 })
+  title: string;
 
-    @ManyToOne(type => Itinerary, itinerary => itinerary.pages,
-        { nullable: false, onDelete: 'CASCADE' })
-    itinerary: Itinerary;
+  @ManyToOne(type => Itinerary, itinerary => itinerary.pages, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  itinerary: Itinerary;
 
-    @OneToMany(type => Item, item => item.page)
-    items: Item[];
+  @OneToMany(type => Item, item => item.page)
+  items: Item[];
 
-    @CreateDateColumn()
-    created: number;
+  @CreateDateColumn()
+  created: number;
 
-    @UpdateDateColumn()
-    updated: number;
+  @UpdateDateColumn()
+  updated: number;
 }

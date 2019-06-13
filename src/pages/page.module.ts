@@ -6,16 +6,9 @@ import { PageController } from './page.controller';
 import { ItineraryModule } from '../itineraries/itinerary.module';
 
 @Module({
-    imports: [DatabaseModule, ItineraryModule],
-    providers: [
-        ...pageProviders,
-        PageService,
-    ],
-    exports: [
-        ...pageProviders,
-        PageService,
-    ],
-    controllers: [ PageController ],
+  imports: [DatabaseModule, ItineraryModule],
+  providers: [...pageProviders, PageService],
+  exports: [...pageProviders, PageService],
+  controllers: [PageController],
 })
-
 export class PageModule {}

@@ -7,16 +7,9 @@ import { ItemController } from './item.controller';
 import { ItineraryModule } from '../itineraries/itinerary.module';
 
 @Module({
-    imports: [DatabaseModule, PageModule, ItineraryModule],
-    providers: [
-        ...itemProviders,
-        ItemService,
-    ],
-    exports: [
-        ...itemProviders,
-        ItemService,
-    ],
-    controllers: [ ItemController ],
+  imports: [DatabaseModule, PageModule, ItineraryModule],
+  providers: [...itemProviders, ItemService],
+  exports: [...itemProviders, ItemService],
+  controllers: [ItemController],
 })
-
 export class ItemModule {}

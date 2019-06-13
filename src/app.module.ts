@@ -14,8 +14,7 @@ import { ExpressBearerTokenMiddleware } from '@nest-middlewares/express-bearer-t
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(ExpressBearerTokenMiddleware)
-    .forRoutes({
+    consumer.apply(ExpressBearerTokenMiddleware).forRoutes({
       path: '*',
       method: RequestMethod.ALL,
     });

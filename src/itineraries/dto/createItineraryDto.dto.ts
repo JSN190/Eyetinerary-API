@@ -1,7 +1,7 @@
 import { IsDefined, IsAscii, IsPositive } from 'class-validator';
 
 export class CreateItineraryDto {
-    @IsDefined()
-    @IsAscii()
-    readonly title: string;
+  @IsDefined()
+  @IsAscii()
+  readonly title: string;
 }
