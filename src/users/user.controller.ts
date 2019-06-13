@@ -20,7 +20,7 @@ export class UserController {
                 ...user,
             };
         } else {
-            throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
+            throw new NotFoundException(`User ${params.id} not found`, 'User Not Found');
         }
     }
 
@@ -51,7 +51,7 @@ export class UserController {
                 deleted,
             };
         } else {
-            throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
+            throw new NotFoundException(`User ${params.id} not found`, 'User Not Found');
         }
     }
 
@@ -64,7 +64,7 @@ export class UserController {
                 itineraries: itineraries.length >= 1 ? itineraries : [],
             };
         } else {
-            throw new NotFoundException(`User ${params.id} not found`, 'Not Found');
+            throw new NotFoundException(`User ${params.id} not found`, 'User Not Found');
         }
     }
 }
