@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
 import { User } from '../users/user.entity';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class ItineraryService {
@@ -33,7 +34,7 @@ export class ItineraryService {
     const inserted = await this.repository
       .createQueryBuilder()
       .insert()
-      .values({ title, editToken: 'test', owner })
+      .values({ title, editToken: this.generateEditToken(), owner })
       .execute();
     return await this.findOne(inserted.identifiers[0].id);
   }
@@ -53,5 +54,11 @@ export class ItineraryService {
       this.repository.remove(itinerary);
     }
     return itinerary;
+  }
+
+  private generateEditToken(): string {
+    const tokenStringLength = 140;
+    const bytes = tokenStringLength / 2;
+    return crypto.randomBytes(bytes).toString('hex');
   }
 }
