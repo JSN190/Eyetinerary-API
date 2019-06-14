@@ -1,4 +1,4 @@
-import { IsAscii, IsNumber, IsPositive, IsDefined } from 'class-validator';
+import { IsAscii, IsPositive, IsDefined, IsOptional } from 'class-validator';
 import { Optional } from '@nestjs/common';
 
 export class CreateItemDto {
@@ -19,4 +19,8 @@ export class CreateItemDto {
 
   @Optional()
   readonly timeEnd: string | number;
+
+  @IsOptional()
+  @IsAscii()
+  readonly editToken: string;
 }

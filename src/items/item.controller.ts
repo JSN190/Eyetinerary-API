@@ -45,28 +45,36 @@ export class ItemController {
   }
 
   @Post()
-  async createItem(@Body() body: CreateItemDto) {
+  async createItem(@Body() body: CreateItemDto, @Req() req) {
     const page: Page = await this.pageService.findOne(body.page);
     const timeStart: Date = new Date(body.timeStart);
     const timeEnd: Date = body.timeEnd ? new Date(body.timeEnd) : null;
-    if (page) {
-      const item: Item = await this.itemService.createNew(
-        body.title,
-        body.body,
-        page,
-        timeStart,
-        timeEnd,
-      );
-      return {
-        success: true,
-        ...item,
-      };
-    } else {
+    if (!page) {
       throw new BadRequestException(
         `Page ${body.page} not found`,
         'Page Not Found',
       );
     }
+
+    if (body.editToken) {
+      await this.itineraryAuth.verifyEditToken(body.editToken, page.itinerary);
+    } else if (req.token) {
+      await this.itineraryAuth.verifyOwnership(req.token, page.itinerary);
+    } else {
+      throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
+    }
+
+    const item: Item = await this.itemService.createNew(
+      body.title,
+      body.body,
+      page,
+      timeStart,
+      timeEnd,
+    );
+    return {
+      success: true,
+      ...item,
+    };
   }
 
   @Patch(':id')
