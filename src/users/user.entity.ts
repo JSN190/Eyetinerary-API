@@ -20,7 +20,7 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @Column({ length: 140, nullable: true })
+  @Column({ length: 140, nullable: true, select: false })
   email: string;
 
   @Column({ length: 75, nullable: true })
