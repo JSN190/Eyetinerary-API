@@ -1,8 +1,9 @@
-import { IsDefined, IsAscii, IsPositive, IsOptional } from 'class-validator';
+import { IsDefined, IsAscii, IsPositive, IsOptional, MaxLength, Length } from 'class-validator';
 
 export class CreatePageDto {
   @IsDefined()
   @IsAscii()
+  @MaxLength(100)
   readonly title: string;
 
   @IsPositive()
@@ -10,5 +11,6 @@ export class CreatePageDto {
 
   @IsOptional()
   @IsAscii()
+  @Length(140)
   readonly editToken: string;
 }
