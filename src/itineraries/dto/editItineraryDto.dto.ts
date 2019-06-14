@@ -8,6 +8,6 @@ export class EditItineraryDto {
 
   @IsOptional()
   @IsAscii()
-  @Length(140)
+  @Length(140, 140)
   readonly editToken: string;
 }
