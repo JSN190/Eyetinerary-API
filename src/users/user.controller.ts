@@ -6,7 +6,7 @@ import {
   Post,
   Body,
   Delete,
-  BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -40,7 +40,7 @@ export class UserController {
       body.username,
     );
     if (usernameTaken) {
-      throw new BadRequestException(
+      throw new ForbiddenException(
         `Username ${body.username} taken`,
         'Username Taken',
       );
