@@ -1,4 +1,4 @@
-import { IsDefined, IsAscii, IsPositive } from 'class-validator';
+import { IsDefined, IsAscii, IsPositive, IsOptional } from 'class-validator';
 
 export class CreatePageDto {
   @IsDefined()
@@ -7,4 +7,8 @@ export class CreatePageDto {
 
   @IsPositive()
   readonly itinerary: number;
+
+  @IsOptional()
+  @IsAscii()
+  readonly editToken: string;
 }

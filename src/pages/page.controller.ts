@@ -45,25 +45,33 @@ export class PageController {
   }
 
   @Post()
-  async createPage(@Body() body: CreatePageDto) {
+  async createPage(@Body() body: CreatePageDto, @Req() req) {
     const itinerary: Itinerary = await this.itineraryService.findOne(
       body.itinerary,
     );
-    if (itinerary) {
-      const page: Page = await this.pageService.createNew(
-        body.title,
-        itinerary,
-      );
-      return {
-        success: true,
-        ...page,
-      };
-    } else {
+    if (!itinerary) {
       throw new BadRequestException(
         `Itinerary ${body.itinerary} not found`,
         'Itinerary Not Found',
       );
     }
+
+    if (body.editToken) {
+      await this.itineraryAuth.verifyEditToken(body.editToken, itinerary);
+    } else if (req.token) {
+      await this.itineraryAuth.verifyOwnership(req.token, itinerary);
+    } else {
+      throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
+    }
+
+    const page: Page = await this.pageService.createNew(
+      body.title,
+      itinerary,
+    );
+    return {
+      success: true,
+      ...page,
+    };
   }
 
   @Patch(':id')
