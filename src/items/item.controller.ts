@@ -19,17 +19,28 @@ import { CreateItemDto } from './dto/createItemDto.dto';
 import { IntineraryAuth } from '../itineraries/itinerary.auth';
 import { DeleteItemDto } from './dto/deleteItemDto.dto';
 import { EditItemDto } from './dto/editItemDto.dto';
+import { Validator } from 'class-validator';
 
 @Controller('item')
 export class ItemController {
+  private validator: Validator;
   constructor(
     private readonly itemService: ItemService,
     private readonly pageService: PageService,
     private readonly itineraryAuth: IntineraryAuth,
-  ) {}
+  ) {
+    this.validator = new Validator();
+  }
 
   @Get(':id')
   async getItem(@Param() params) {
+    const validParams = this.validator.isNumberString(params.id);
+    if (!validParams) {
+      throw new BadRequestException(
+        'id must be an integer',
+        'Bad Request',
+      );
+    }
     const item: Item = await this.itemService.findOne(params.id);
     if (item) {
       return {

@@ -19,17 +19,29 @@ import { CreatePageDto } from './dto/createPageDto.dto';
 import { IntineraryAuth } from '../itineraries/itinerary.auth';
 import { DeletePageDto } from './dto/deletePageDto.dto';
 import { EditPageDto } from './dto/editPageDto.dto';
+import { Validator } from 'class-validator';
 
 @Controller('page')
 export class PageController {
+  private validator: Validator;
   constructor(
     private readonly pageService: PageService,
     private readonly itineraryService: ItineraryService,
     private readonly itineraryAuth: IntineraryAuth,
-  ) {}
+  ) {
+    this.validator = new Validator();
+  }
 
   @Get(':id')
   async getPage(@Param() params) {
+    const validParams = this.validator.isNumberString(params.id);
+    if (!validParams) {
+      throw new BadRequestException(
+        'id must be an  integer',
+        'Bad Request',
+      );
+    }
+
     const page: Page = await this.pageService.findOne(params.id);
     if (page) {
       return {
@@ -64,10 +76,7 @@ export class PageController {
       throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
     }
 
-    const page: Page = await this.pageService.createNew(
-      body.title,
-      itinerary,
-    );
+    const page: Page = await this.pageService.createNew(body.title, itinerary);
     return {
       success: true,
       ...page,

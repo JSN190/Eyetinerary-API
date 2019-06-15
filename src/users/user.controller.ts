@@ -7,19 +7,32 @@ import {
   Body,
   Delete,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { RegisterUserDto } from './dto/registerUserDto.dto';
 import { Itinerary } from '../itineraries/itinerary.entity';
 import { DeleteUserDto } from '../users/dto/deleteUserDto.dto';
+import { Validator } from 'class-validator';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  private validator: Validator;
+  constructor(private readonly userService: UserService) {
+    this.validator = new Validator();
+  }
 
   @Get(':id')
   async getUser(@Param() params) {
+    const validParams = this.validator.isNumberString(params.id);
+    if (!validParams) {
+      throw new BadRequestException(
+        'id must be an integer',
+        'Bad Request',
+      );
+    }
+
     const user: User = await this.userService.findOne(params.id);
     if (user) {
       return {

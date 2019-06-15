@@ -9,6 +9,7 @@ import {
   Req,
   UnauthorizedException,
   Patch,
+  BadRequestException,
 } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
 import { Itinerary } from './itinerary.entity';
@@ -19,17 +20,29 @@ import { AuthService } from '../auth/auth.service';
 import { DeleteItineraryDto } from '../itineraries/dto/deleteItineraryDto.dto';
 import { EditItineraryDto } from './dto/editItineraryDto.dto';
 import { IntineraryAuth } from './itinerary.auth';
+import { Validator } from 'class-validator';
 
 @Controller('itinerary')
 export class ItineraryController {
+  private validator: Validator;
   constructor(
     private readonly itineraryService: ItineraryService,
     private readonly itineraryAuth: IntineraryAuth,
     private readonly authService: AuthService,
-  ) {}
+  ) {
+    this.validator = new Validator();
+  }
 
   @Get(':id')
   async getItinerary(@Param() params) {
+    const validParams = this.validator.isNumberString(params.id);
+    if (!validParams) {
+      throw new BadRequestException(
+        'id must be an integer',
+        'Bad Request',
+      );
+    }
+
     const item: Itinerary = await this.itineraryService.findOne(params.id);
     if (item) {
       return {
