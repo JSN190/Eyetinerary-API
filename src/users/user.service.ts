@@ -50,16 +50,26 @@ export class UserService {
   }
 
   async deleteOne(id: number): Promise<User> {
-    // Does not delete user's itineraries
-    const user: User = await this.repository.findOne({ id });
+    const user: User = await this.repository.findOne(
+      { id },
+      { relations: ['itineraries'] },
+    );
     if (user) {
-      await this.repository.remove(user);
+      await this.entityManager.transaction(async manager => {
+        // Disassociate user with their itineraries
+        if (user.itineraries) {
+          user.itineraries.forEach(async itinerary => {
+            itinerary.owner = null;
+            await manager.save(itinerary);
+          });
+        }
+        await manager.remove(user);
+      });
     }
     return user;
   }
 
   async deleteOneWithItineraries(id: number): Promise<User> {
-    // Cascade not used in order to allow itinerary preservation with deleteOne
     const user: User = await this.repository.findOne(
       { id },
       { relations: ['itineraries'] },
