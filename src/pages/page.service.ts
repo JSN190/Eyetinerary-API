@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Page } from './page.entity';
 import { Itinerary } from '../itineraries/itinerary.entity';
+import { ConflictingRankError } from './ConflictingRankError';
 
 @Injectable()
 export class PageService {
@@ -20,19 +21,44 @@ export class PageService {
       .getOne();
   }
 
-  async createNew(title: string, itinerary: Itinerary): Promise<Page> {
+  async createNew(
+    title: string,
+    itinerary: Itinerary,
+    rankInItinerary?: number,
+  ): Promise<Page> {
+    if (!rankInItinerary) {
+      rankInItinerary = await this.nextAvailableRank(itinerary);
+    } else if (rankInItinerary) {
+      const rankTaken = !(await this.rankAvailable(itinerary, rankInItinerary));
+      if (rankTaken) {
+        throw new ConflictingRankError(rankInItinerary);
+      }
+    }
     const inserted = await this.repository
       .createQueryBuilder()
       .insert()
-      .values({ title, itinerary })
+      .values({ title, itinerary, rankInItinerary })
       .execute();
     return await this.findOne(inserted.identifiers[0].id);
   }
 
-  async updateOne(id: number, title: string): Promise<Page> {
+  async updateOne(
+    id: number,
+    title?: string,
+    rankInItinerary?: number,
+  ): Promise<Page> {
     const page: Page = await this.findOne(id);
     if (page) {
-      page.title = title;
+      if (title) {
+        page.title = title;
+      }
+      if (rankInItinerary) {
+        const rankTaken = !(await this.rankAvailable(page.itinerary, rankInItinerary));
+        if (rankTaken) {
+          throw new ConflictingRankError(rankInItinerary);
+        }
+        page.rankInItinerary = rankInItinerary;
+      }
       this.repository.save(page);
     }
     return page;
@@ -44,5 +70,27 @@ export class PageService {
       this.repository.remove(page);
     }
     return page;
+  }
+
+  async nextAvailableRank(itinerary: Itinerary): Promise<number> {
+    let rankInItinerary = 0;
+    if (!rankInItinerary) {
+      rankInItinerary = 0;
+      const itineraryPages: Page[] = await this.repository.find({ itinerary });
+      itineraryPages.forEach(page => {
+        if (page.rankInItinerary >= rankInItinerary) {
+          rankInItinerary = page.rankInItinerary + 1;
+        }
+      });
+    }
+    return rankInItinerary;
+  }
+
+  async rankAvailable(itinerary: Itinerary, rank: number): Promise<boolean> {
+    const conflictingPages: Page[] = await this.repository.find({
+      itinerary,
+      rankInItinerary: rank,
+    });
+    return conflictingPages.length < 1;
   }
 }

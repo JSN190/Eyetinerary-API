@@ -24,6 +24,9 @@ export class Page {
   })
   itinerary: Itinerary;
 
+  @Column()
+  rankInItinerary: number;
+
   @OneToMany(type => Item, item => item.page)
   items: Item[];
 
