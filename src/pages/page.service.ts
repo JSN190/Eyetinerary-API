@@ -53,7 +53,10 @@ export class PageService {
         page.title = title;
       }
       if (rankInItinerary) {
-        const rankTaken = !(await this.rankAvailable(page.itinerary, rankInItinerary));
+        const rankTaken = !(await this.rankAvailable(
+          page.itinerary,
+          rankInItinerary,
+        ));
         if (rankTaken) {
           throw new ConflictingRankError(rankInItinerary);
         }
@@ -73,16 +76,13 @@ export class PageService {
   }
 
   async nextAvailableRank(itinerary: Itinerary): Promise<number> {
-    let rankInItinerary = 0;
-    if (!rankInItinerary) {
-      rankInItinerary = 0;
-      const itineraryPages: Page[] = await this.repository.find({ itinerary });
-      itineraryPages.forEach(page => {
-        if (page.rankInItinerary >= rankInItinerary) {
-          rankInItinerary = page.rankInItinerary + 1;
-        }
-      });
-    }
+    let rankInItinerary = 1;
+    const itineraryPages: Page[] = await this.repository.find({ itinerary });
+    itineraryPages.forEach(page => {
+      if (page.rankInItinerary >= rankInItinerary) {
+        rankInItinerary = page.rankInItinerary + 1;
+      }
+    });
     return rankInItinerary;
   }
 
