@@ -10,6 +10,7 @@ import {
   UnauthorizedException,
   Req,
   Patch,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PageService } from './page.service';
 import { Page } from './page.entity';
@@ -36,10 +37,7 @@ export class PageController {
   async getPage(@Param() params) {
     const validParams = this.validator.isNumberString(params.id);
     if (!validParams) {
-      throw new BadRequestException(
-        'id must be an  integer',
-        'Bad Request',
-      );
+      throw new BadRequestException('id must be an  integer', 'Bad Request');
     }
 
     const page: Page = await this.pageService.findOne(params.id);
@@ -61,11 +59,16 @@ export class PageController {
     const itinerary: Itinerary = await this.itineraryService.findOne(
       body.itinerary,
     );
+
     if (!itinerary) {
       throw new BadRequestException(
         `Itinerary ${body.itinerary} not found`,
         'Itinerary Not Found',
       );
+    }
+
+    if (body.rankInItinerary) {
+      await this.verifyRankAvailable(itinerary, body.rankInItinerary);
     }
 
     if (body.editToken) {
@@ -76,7 +79,11 @@ export class PageController {
       throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
     }
 
-    const page: Page = await this.pageService.createNew(body.title, itinerary);
+    const page: Page = await this.pageService.createNew(
+      body.title,
+      itinerary,
+      body.rankInItinerary,
+    );
     return {
       success: true,
       ...page,
@@ -93,6 +100,11 @@ export class PageController {
       );
     }
 
+    // Verifcation procedures
+    if (body.rankInItinerary) {
+      await this.verifyRankAvailable(page.itinerary, body.rankInItinerary);
+    }
+    // Verify authentication
     if (body.editToken) {
       await this.itineraryAuth.verifyEditToken(body.editToken, page.itinerary);
     } else if (req.token) {
@@ -101,7 +113,11 @@ export class PageController {
       throw new UnauthorizedException('No Token Supplied', 'No Token Supplied');
     }
 
-    const updated: Page = await this.pageService.updateOne(page.id, body.title);
+    const updated: Page = await this.pageService.updateOne(
+      page.id,
+      body.title,
+      body.rankInItinerary,
+    );
     return {
       success: true,
       updated,
@@ -131,5 +147,15 @@ export class PageController {
       success: true,
       deleted,
     };
+  }
+
+  private async verifyRankAvailable(itinerary: Itinerary, rank: number) {
+    const rankTaken = !(await this.pageService.rankAvailable(itinerary, rank));
+    if (rankTaken) {
+      throw new ForbiddenException(
+        `Rank ${rank} already in use for itinerary ${itinerary.id}`,
+        'Rank Taken',
+      );
+    }
   }
 }

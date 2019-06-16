@@ -1,4 +1,11 @@
-import { IsDefined, IsAscii, IsPositive, IsOptional, MaxLength, Length } from 'class-validator';
+import {
+  IsDefined,
+  IsAscii,
+  IsPositive,
+  IsOptional,
+  MaxLength,
+  Length,
+} from 'class-validator';
 
 export class CreatePageDto {
   @IsDefined()
@@ -8,6 +15,10 @@ export class CreatePageDto {
 
   @IsPositive()
   readonly itinerary: number;
+
+  @IsOptional()
+  @IsPositive()
+  readonly rankInItinerary: number;
 
   @IsOptional()
   @IsAscii()
