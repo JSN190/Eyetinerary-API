@@ -11,7 +11,7 @@ export class AuthController {
   @HttpCode(200)
   async login(@Body() body: LoginDto) {
     const user: User = await this.authService.authenticateByPassword(
-      body.username,
+      body.username.toLowerCase(),
       body.password,
     );
     if (user) {

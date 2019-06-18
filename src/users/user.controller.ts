@@ -50,7 +50,7 @@ export class UserController {
   @Post()
   async registerUser(@Body() body: RegisterUserDto) {
     const usernameTaken = await this.userService.findOneByUsername(
-      body.username,
+      body.username.toLowerCase(),
     );
     if (usernameTaken) {
       throw new ForbiddenException(
@@ -59,7 +59,7 @@ export class UserController {
       );
     } else {
       const id: number = await this.userService.createNew(
-        body.username,
+        body.username.toLowerCase(),
         body.password,
         body.email,
         body.location,
