@@ -23,7 +23,7 @@ export class User {
   @Column({ length: 140, nullable: true, select: false })
   email: string;
 
-  @Column({ length: 75, nullable: true })
+  @Column({ length: 20, nullable: true })
   location: string;
 
   @Column({ length: 2, nullable: true })
