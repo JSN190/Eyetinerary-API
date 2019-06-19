@@ -27,7 +27,7 @@ export class RegisterUserDto {
 
   @IsOptional()
   @IsAscii()
-  @MaxLength(20)
+  @MaxLength(50)
   readonly location: string;
 
   @IsOptional()
