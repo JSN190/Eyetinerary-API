@@ -5,7 +5,7 @@
 
 Platform for effortless creation, sharing and management of travel and general itineraries.
 
-Backend API written in TypeScript, running on the Node.js platform. It is built on top of the Nest.js framework, with PostgreSQL using TypeORM.
+Backend API written in [TypeScript](https://www.typescriptlang.org/), running on the Node.js platform. It is built on top of the [Nest.js](https://nestjs.com/) framework, with PostgreSQL using [TypeORM](https://typeorm.io).
 
 ## GET Methods
 ### GET `/itinerary/:id`
