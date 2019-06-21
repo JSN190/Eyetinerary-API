@@ -2,9 +2,10 @@
 ![Repository Size](https://img.shields.io/github/repo-size/Tyncture/Eyetinerary-API.svg?t&style=flat-square)
 ![License](https://img.shields.io/github/license/Tyncture/Eyetinerary-API.svg?&style=flat-square)
 ![Top Language](https://img.shields.io/github/languages/top/Tyncture/Eyetinerary-API.svg?&style=flat-square)
+
 Platform for effortless creation, sharing and management of travel and general itineraries.
 
-The backend API is written in TypeScript and runs on the Node.js platform. It is built on top of the Nest.js framework, with PostgreSQL using TypeORM.
+Backend API is written in TypeScript and runs on the Node.js platform. It is built on top of the Nest.js framework, with PostgreSQL using TypeORM.
 
 ## GET Methods
 ### GET `/itinerary/:id`
