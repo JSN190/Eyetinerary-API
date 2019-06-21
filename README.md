@@ -3,9 +3,83 @@ Platform for effortless creation, sharing and management of travel and general i
 
 The backend API is written in TypeScript and runs on the Node.js platform. It is built on top of the Nest.js framework, with PostgreSQL using TypeORM.
 
+## GET Methods
+### GET `/itinerary/:id`
+#### Response Body
+| Key         | Type     | Description                      |
+|-------------|----------|----------------------------------|
+| id          | `number` | Unique itinerary identifier      |
+| title        | `string` | Itinerary title                   |
+| description | `string` | Itinerary description            |
+| owner       | `Object` | Owner information, if applicable |
+| pages       | `Object` | Pages, if applicable             |
+| created     | `string` | Created timestamp                |
+| updated     | `string` | Last updated timestamp           |
 
-## API Documentation
-*TODO*
+### GET `/page/:id`
+#### Response Body
+| Key             | Type     | Description                     |
+|-----------------|----------|---------------------------------|
+| id              | `number` | Unique page identifier          |
+| title            | `string` | Page title                       |
+| description     | `string` | Page description                |
+| itinerary       | `Object` | Parent itinerary                |
+| rankInItinerary | `number` | Page number in parent itinerary |
+| items           | `Object` | Items, if applicable            |
+| created         | `string` | Created timestamp               |
+| updated         | `string` | Last updated timestamp          |
+
+### GET `/item/:id`
+#### Response Body
+| Key       | Type     | Description            |
+|-----------|----------|------------------------|
+| id        | `number` | Unique item identifier |
+| title     | `string` | Item title             |
+| body      | `string` | Item body              |
+| timeStart | `string` | Item start timestamp   |
+| timeEnd   | `string` | Item end timestamp     |
+| page      | `Object` | Parent page            |
+| created   | `string` | Created timestamp      |
+| updated   | `string` | Last updated timestamp |
+
+## POST/PATCH methods
+### POST `/itinerary` + PATCH `/itinerary/:id`
+#### Request Body
+| Key         | Type     | Description           |
+|-------------|----------|-----------------------|
+| title       | `string` | Itinerary title       |
+| description | `string` | Itinerary description |
+
+#### Response Body
+| Key       | Type     | Description                          |
+|-----------|----------|--------------------------------------|
+| editToken | `string` | Edit token for ownerless itineraries |
+
+### POST `/page` + PATCH `/page/:id`
+#### Request Body
+| Key             | Type     | Description                                   |
+|-----------------|----------|-----------------------------------------------|
+| title           | `string` | Page title                                    |
+| itinerary       | `number` | Parent itinerary ID                           |
+| description     | `string` | Page description                              |
+| rankInItinerary | `number` | Page number in parent itinerary               |
+| editToken       | `string` | Optional - for when no JWT provided in header |
+#### Response body
+Same as GET `/page/:id` with new ID returned.
+
+### POST `/item` + PATCH `/item/:id`
+#### Request Body
+| Key        | Type     | Description                                   |
+|------------|----------|-----------------------------------------------|
+| title      | `string` | Item title                                    |
+| page       | `number` | Parent page ID                                |
+| body       | `string` | Item body                                     |
+| rankInPage | `number` | Item number in parent page                    |
+| timeStart  | `string` | Item start timestamp                          |
+| timeEnd    | `string` | Optional - item end timestamp                 |
+| editToken  | `string` | Optional - for when no JWT provided in header |
+#### Response body
+Same as GET `/item/:id` with new ID returned.
 
 ## License
 ```
