@@ -17,6 +17,10 @@ export class AuthController {
     if (user) {
       return {
         success: true,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
         token: await this.authService.grantJwtToken(user.id),
       };
     } else {
