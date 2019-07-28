@@ -60,12 +60,11 @@ export class SearchService {
         }>;
 
         for (const hit of hits) {
-          console.log(hit);
           const itinerary = await this.itineraryService.findOne(
             Number(hit._id),
           );
           if (itinerary) {
-            const nameLengthPenalty = name
+            const nameDiffPenalty = name
               ? itinerary.title.length > name.length
                 ? itinerary.title.length - name.length
                 : name.length > itinerary.title.length
@@ -74,7 +73,7 @@ export class SearchService {
               : 1;
             itineraries.push({
               ...itinerary,
-              _relevance: hit._score / nameLengthPenalty,
+              _relevance: hit._score / nameDiffPenalty,
             });
           }
         }
@@ -89,12 +88,13 @@ export class SearchService {
   }
 
   private nameWildcard(name: string) {
+    const boostFactor = 3;
     return [
       {
         wildcard: {
           name: {
             value: `${name}`,
-            boost: 4,
+            boost: 4 * boostFactor,
           },
         },
       },
@@ -102,7 +102,7 @@ export class SearchService {
         wildcard: {
           name: {
             value: `${name}*`,
-            boost: 3,
+            boost: 3 * boostFactor,
           },
         },
       },
@@ -110,7 +110,7 @@ export class SearchService {
         wildcard: {
           name: {
             value: `*${name}`,
-            boost: 2,
+            boost: 2 * boostFactor,
           },
         },
       },
@@ -118,7 +118,7 @@ export class SearchService {
         wildcard: {
           name: {
             value: `*${name}*`,
-            boost: 1,
+            boost: 1 + boostFactor,
           },
         },
       },
