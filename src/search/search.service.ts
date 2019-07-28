@@ -18,12 +18,21 @@ export class SearchService {
         `${process.env.EYET_ELASTIC}/itinerary/_search`,
         {
           data: {
+            track_scores: true,
             query: {
               bool: {
                 should: criteria,
               },
             },
             sort: [
+              {
+                _script: {
+                  // Note: Ensure that fieldata is enabled on Elasticsearch
+                  script: 'doc[\'name\'].value.length()',
+                  type: 'number',
+                  order: 'asc',
+                },
+              },
               {
                 _score: {
                   order: 'desc',
@@ -49,20 +58,31 @@ export class SearchService {
           _id: string;
           _score: number;
         }>;
+
         for (const hit of hits) {
+          console.log(hit);
           const itinerary = await this.itineraryService.findOne(
             Number(hit._id),
           );
           if (itinerary) {
+            const nameLengthPenalty = name
+              ? itinerary.title.length > name.length
+                ? itinerary.title.length - name.length
+                : name.length > itinerary.title.length
+                ? name.length - itinerary.title.length
+                : 1
+              : 1;
             itineraries.push({
-              _score: hit._score,
               ...itinerary,
+              _relevance: hit._score / nameLengthPenalty,
             });
           }
         }
+
         return itineraries;
       }
     } catch (e) {
+      console.log(e.response.data.error.failed_shards[0].reason);
       console.error('Failed to query Elasticsearch.');
     }
     return null;
