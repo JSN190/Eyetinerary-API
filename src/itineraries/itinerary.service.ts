@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
 import { User } from '../users/user.entity';
 import * as crypto from 'crypto';
+import Axios from 'axios';
 
 @Injectable()
 export class ItineraryService {
@@ -36,7 +37,9 @@ export class ItineraryService {
       .insert()
       .values({ title, editToken: this.generateEditToken(), owner })
       .execute();
-    return await this.findOne(inserted.identifiers[0].id);
+    const itinerary = await this.findOne(inserted.identifiers[0].id);
+    this.pushToElasticsearch(itinerary);
+    return itinerary;
   }
 
   async updateOne(id: number, title: string): Promise<Itinerary> {
@@ -45,6 +48,7 @@ export class ItineraryService {
       itinerary.title = title;
       this.repository.save(itinerary);
     }
+    this.pushToElasticsearch(itinerary);
     return itinerary;
   }
 
@@ -53,12 +57,52 @@ export class ItineraryService {
     if (itinerary) {
       this.repository.remove(itinerary);
     }
+    this.removeFromElasticSearch(id);
     return itinerary;
   }
 
   private generateEditToken(): string {
+    // TODO: Stronger token
     const tokenStringLength = 140;
     const bytes = tokenStringLength / 2;
     return crypto.randomBytes(bytes).toString('hex');
+  }
+
+  private async pushToElasticsearch(itinerary: Itinerary) {
+    try {
+      if (process.env.EYET_ELASTIC) {
+        await Axios.put(
+          `${process.env.EYET_ELASTIC}/itinerary/_doc/${itinerary.id}`,
+          {
+            id: itinerary.id,
+            name: itinerary.title,
+            created: itinerary.created,
+            updated: itinerary.updated,
+          },
+        );
+      }
+    } catch (e) {
+      console.error('ERROR: Failed to push to Elasticsearch cluster.');
+      if (e.response) {
+        console.log(e.response);
+      } else {
+        console.log(e);
+      }
+    }
+  }
+
+  private async removeFromElasticSearch(id: number) {
+    try {
+      if (process.env.EYET_ELASTIC) {
+        await Axios.delete(`${process.env.EYET_ELASTIC}/itinerary/_doc/${id}`);
+      }
+    } catch (e) {
+      console.error('ERROR: Failed to remove from Elasticsearch cluster.');
+      if (e.response) {
+        console.log(e.response);
+      } else {
+        console.log(e);
+      }
+    }
   }
 }
