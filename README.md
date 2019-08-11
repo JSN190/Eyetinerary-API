@@ -3,12 +3,34 @@
 ![License](https://img.shields.io/github/license/Tyncture/Eyetinerary-API.svg?&style=flat-square)
 ![Top Language](https://img.shields.io/github/languages/top/Tyncture/Eyetinerary-API.svg?&style=flat-square)
 
-Platform for effortless creation, sharing and management of travel and general itineraries.
+Platform for effortless creation, sharing and management of travel 
+and general itineraries.
 
 Backend API built with [TypeScript](https://www.typescriptlang.org/), [Nest.js](https://nestjs.com/), 
 [PostgreSQL](https://www.postgresql.org/), [TypeORM](https://typeorm.io) and [Elasticsearch](https://www.elastic.co/products/elasticsearch).
 
-## GET Methods
+## Getting Started
+First, install the required dependencies using one of the following 
+commands.
+```sh
+npm install # development, with dev dependencies
+npm install --production # production, no dev dependencies
+```
+
+Next, establish and set the environment variables. You can refer to the
+[Environment Variables](#Environment-Variables) section for more
+details. These can also be declared in a `.env` file for 
+development purposes. 
+
+Afterwards, the application can be started using one of the following 
+commands.
+
+```sh
+npm run start # deployment
+npm run start:dev # development
+```
+
+## REST API Documentation
 ### GET `/itinerary/:id`
 #### Response Body
 | Key         | Type     | Description                      |
@@ -47,8 +69,7 @@ Backend API built with [TypeScript](https://www.typescriptlang.org/), [Nest.js](
 | created   | `string` | Created timestamp      |
 | updated   | `string` | Last updated timestamp |
 
-## POST/PATCH methods
-### POST `/itinerary` + PATCH `/itinerary/:id`
+### POST `/itinerary` / PATCH `/itinerary/:id`
 #### Request Body
 | Key         | Type     | Description           |
 |-------------|----------|-----------------------|
@@ -60,7 +81,7 @@ Backend API built with [TypeScript](https://www.typescriptlang.org/), [Nest.js](
 |-----------|----------|--------------------------------------|
 | editToken | `string` | Edit token for ownerless itineraries |
 
-### POST `/page` + PATCH `/page/:id`
+### POST `/page` / PATCH `/page/:id`
 #### Request Body
 | Key             | Type     | Description                                   |
 |-----------------|----------|-----------------------------------------------|
@@ -72,7 +93,7 @@ Backend API built with [TypeScript](https://www.typescriptlang.org/), [Nest.js](
 #### Response body
 Same as GET `/page/:id` with new ID returned.
 
-### POST `/item` + PATCH `/item/:id`
+### POST `/item` / PATCH `/item/:id`
 #### Request Body
 | Key        | Type     | Description                                   |
 |------------|----------|-----------------------------------------------|
@@ -85,6 +106,17 @@ Same as GET `/page/:id` with new ID returned.
 | editToken  | `string` | Optional - for when no JWT provided in header |
 #### Response body
 Same as GET `/item/:id` with new ID returned.
+
+## Environment Variables
+
+| Key             | Description                          |
+|-----------------|--------------------------------------|
+| NODE_ENV        | `development` or `production`        |
+| EYET_PGUSERNAME | PostgreSQL username                  |
+| EYET_PGPASSWORD | PostgreSQL password                  |
+| EYET_PGDATABASE | PostgreSQL database name             |
+| EYET_PORT       | Port for the HTTP server to liste on |
+| EYET_JWTSECRET  | Symmetric key for JWT signing        |
 
 ## License
 ```
