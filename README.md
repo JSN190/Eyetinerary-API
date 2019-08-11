@@ -3,10 +3,8 @@
 ![License](https://img.shields.io/github/license/Tyncture/Eyetinerary-API.svg?&style=flat-square)
 ![Top Language](https://img.shields.io/github/languages/top/Tyncture/Eyetinerary-API.svg?&style=flat-square)
 
-Platform for effortless creation, sharing and management of travel 
-and general itineraries.
-
-Backend API built with [TypeScript](https://www.typescriptlang.org/), [Nest.js](https://nestjs.com/), 
+Platform for effortless creation, sharing and management of travel and general itineraries. 
+Backend API, built with [TypeScript](https://www.typescriptlang.org/), [Nest.js](https://nestjs.com/), 
 [PostgreSQL](https://www.postgresql.org/), [TypeORM](https://typeorm.io) and [Elasticsearch](https://www.elastic.co/products/elasticsearch).
 
 ## Getting Started
