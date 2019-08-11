@@ -20,7 +20,7 @@ Next, establish and set the environment variables. You can refer to the
 details. These can also be declared in a `.env` file for 
 development purposes. 
 
-Afterwards, the application can be started using one of the following 
+Afterwards, you can start the application with one of the following
 commands.
 
 ```sh
@@ -107,14 +107,14 @@ Same as GET `/item/:id` with new ID returned.
 
 ## Environment Variables
 
-| Key             | Description                          |
-|-----------------|--------------------------------------|
-| NODE_ENV        | `development` or `production`        |
-| EYET_PGUSERNAME | PostgreSQL username                  |
-| EYET_PGPASSWORD | PostgreSQL password                  |
-| EYET_PGDATABASE | PostgreSQL database name             |
-| EYET_PORT       | Port for the HTTP server to liste on |
-| EYET_JWTSECRET  | Symmetric key for JWT signing        |
+| Key             | Description                           |
+|-----------------|---------------------------------------|
+| NODE_ENV        | `development` or `production`         |
+| EYET_PGUSERNAME | PostgreSQL username                   |
+| EYET_PGPASSWORD | PostgreSQL password                   |
+| EYET_PGDATABASE | PostgreSQL database name              |
+| EYET_PORT       | Port for the HTTP server to listen on |
+| EYET_JWTSECRET  | Symmetric key for JWT signing         |
 
 ## License
 ```
